@@ -19,7 +19,9 @@ import {
   asyncGetFiles,
   UPDATE_USERINFOFROMDB,
   USER_ERROR,
-  OriderStateType
+  OriderStateType,
+  ManageStateType,
+  TaskStateType
 } from "../../store";
 import {
   wxLogin,
@@ -56,6 +58,8 @@ const RecommendDetail = () => {
     state => state.recommends
   );
   const order = useSelector<StoreType, OriderStateType>(state => state.order);
+  const task = useSelector<StoreType, TaskStateType>(state => state.task);
+  const manage = useSelector<StoreType, ManageStateType>(state => state.manage);
   const UserInfo = useSelector<StoreType, UserStateType>(state => state.user);
   const dispatch = useDispatch();
   const recommendInfo = useMemo(() => recommends.currentRecommend, [
@@ -86,7 +90,13 @@ const RecommendDetail = () => {
     userId: string;
     userName: string;
   } | null>(null);
-
+  console.log(
+    [
+      task.currentTask?.taskId,
+      order.currentOrder?.taskId,
+      manage.currentManage?.taskId
+    ][Number(type)]
+  );
   useEffect(() => {
     return () => {
       dispatch(updateCurrentRecommend());
@@ -127,7 +137,14 @@ const RecommendDetail = () => {
   const getOrderDetail = async () => {
     const { data } = await [taskDetail, orderDetail, manageDetail][
       Number(type)
-    ](UserInfo.accessToken, order.currentOrder.orderId);
+    ](
+      UserInfo.accessToken,
+      [
+        task.currentTask?.taskId,
+        order.currentOrder?.taskId,
+        manage.currentManage?.taskId
+      ][Number(type)]
+    );
     setDetail(data);
   };
 
