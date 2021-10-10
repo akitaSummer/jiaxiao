@@ -1,0 +1,54 @@
+.file-detail {
+    position: relative;
+    display: flex;
+    height: 100vh;
+    flex-direction: column;
+    .tips-container {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        .tips {
+            color: #999;
+            font-size: 24px;
+        }
+    }
+    .info_item {
+        width: 100%;
+        border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+        margin: 0;
+        padding-left: 64px;
+        height: 116px;
+        display: flex;
+        align-items: center;
+        transition: background-color .2s;
+        &:active {
+            background-color: rgba(153, 153, 153, 0.2);
+        }
+        .iconfont {
+            font-size: 36px;
+            margin-right: 12px;
+        }
+        .item_name {
+            flex: 1;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .delete {
+            margin-right: 64px;
+            padding: 0 32px;
+        }
+    }
+    .button-group {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        .submit-button {
+            margin-bottom: 10px;
+        }
+        &.ios {
+            margin-bottom: 40px;
+        }
+    }
+}

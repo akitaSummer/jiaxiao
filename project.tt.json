@@ -1,0 +1,13 @@
+{
+    "miniprogramRoot": "./",
+    "projectname": "jump",
+    "description": "",
+    "appid": "wx3b20938513283c38",
+    "setting": {
+        "urlCheck": true,
+        "es6": false,
+        "postcss": false,
+        "minified": false
+    },
+    "compileType": "miniprogram"
+}

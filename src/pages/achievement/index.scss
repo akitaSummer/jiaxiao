@@ -1,0 +1,26 @@
+.comment-page {
+    height: 100vh;
+    position: relative;
+    display: flex;
+    .button-group {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        .submit-button {
+            margin-bottom: 10px;
+        }
+        &.ios {
+            margin-bottom: 40px;
+        }
+    }
+    .comment-textarea {
+        box-sizing: border-box;
+        flex: 1;
+        margin: 20px;
+        height: 400px;
+    }
+}
+
+.info-edit-message {
+    z-index: 1000;
+}

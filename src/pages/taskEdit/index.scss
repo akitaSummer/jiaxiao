@@ -1,0 +1,101 @@
+.info-edit {
+    height: 100vh;
+    position: relative;
+    .form-item {
+        width: 100%;
+        min-height: 48px;
+        padding: 24px 18px 24px 0;
+        margin-left: 32px;
+        display: flex;
+        border-bottom: 1px solid rgba(214, 228, 239, 0.5);
+        .item-title {
+            width: 172px;
+            margin-right: 16px;
+            display: flex;
+            align-items: center;
+        }
+        .item-value {
+            flex: 1;
+            .at-tag--active {
+                margin: 12px 24px 12px 0;
+                &:nth-child(2) {
+                    background-color: $my-pick;
+                    border-color: $my-pick;
+                }
+                &:nth-child(3) {
+                    background-color: $my-green;
+                    border-color: $my-green;
+                }
+            }
+            &.item-empty {
+                color: #CCC;
+            }
+            .item-empty {
+                color: #CCC;
+            }
+        }
+    }
+    .at-form {
+        height: 100%;
+    }
+    .at-input__container {
+        padding-right: 16px;
+    }
+    .degree-list {
+        .at-list__item {
+            padding-left: 32px;
+        }
+        .at-list {
+            padding-left: 4px;
+            &::after {
+                border-top-width: 0;
+                border-bottom-width: 0;
+            }
+            .item-content {
+                flex: none;
+                width: 172px;
+                margin-right: 16px;
+            }
+        }
+    }
+    .button-group {
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        .submit-button {
+            margin-bottom: 10px;
+        }
+        &.ios {
+            margin-bottom: 40px;
+        }
+    }
+    .school-float {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        .scroll-container {
+            height: 700px;
+        }
+        .school-list-item {
+            text-align: center;
+            &.school-select {
+                background-color: rgba(214, 228, 239, 0.5);
+            }
+        }
+    }
+    .limit-alert {
+        color: red;
+        font-size: 24px;
+        padding: 24px 18px 24px 0;
+        width: 100%;
+        min-height: 48px;
+        margin-left: 32px;
+        .at-icon {
+            margin-right: 12px;
+        }
+    }
+}
+
+.info-edit-message {
+    z-index: 1000;
+}
