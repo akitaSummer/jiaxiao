@@ -21,7 +21,8 @@ import {
   USER_ERROR,
   OriderStateType,
   ManageStateType,
-  TaskStateType
+  TaskStateType,
+  updateTaskEdit
 } from "../../store";
 import {
   wxLogin,
@@ -416,7 +417,21 @@ const RecommendDetail = () => {
                           {
                             type: 2,
                             status: "已处理",
-                            method: (accessToken: string, taskId: string) => {}
+                            method: (accessToken: string, taskId: string) => {
+                              dispatch(
+                                updateTaskEdit({
+                                  content: task.currentTask.content,
+                                  invalidTime: task.currentTask.receiveTime,
+                                  point: task.currentTask.point,
+                                  positionId: task.currentTask.positionId,
+                                  title: task.currentTask.title
+                                })
+                              );
+                              Taro.navigateTo({
+                                url: "/pages/taskEdit/index",
+                                complete: () => {}
+                              });
+                            }
                           }
                         ]
                           .filter(

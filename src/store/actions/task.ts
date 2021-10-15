@@ -1,4 +1,8 @@
-import { UPDATECURRENTTASK, DATAS_ERROR } from "../constants";
+import {
+  UPDATECURRENTTASK,
+  DATAS_ERROR,
+  UPDATETASKDETTAIL
+} from "../constants";
 
 export const updateCurrentTask = (data?: {
   content: string;
@@ -19,4 +23,11 @@ export const updateCurrentTask = (data?: {
         type: UPDATECURRENTTASK,
         data: DATAS_ERROR
       };
+};
+
+export const updateTaskEdit = data => {
+  return {
+    type: UPDATETASKDETTAIL,
+    data
+  };
 };

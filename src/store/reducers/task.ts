@@ -1,4 +1,8 @@
-import { UPDATECURRENTTASK, UPDATEORDERDETAIL } from "../constants";
+import {
+  UPDATECURRENTTASK,
+  UPDATEORDERDETAIL,
+  UPDATETASKDETTAIL
+} from "../constants";
 
 export type TaskType = {
   content: string;
@@ -28,6 +32,13 @@ export type TaskStateType = {
     userId: string;
     userName: string;
   };
+  taskEdit?: {
+    content: string;
+    invalidTime: string;
+    point: number;
+    positionId: string;
+    title: string;
+  };
 };
 
 export const TASK_INITIAL_STATE: TaskStateType = {
@@ -49,6 +60,20 @@ export default (state = TASK_INITIAL_STATE, actions) => {
         actionType: actions.type,
         orderDetail: actions.data
       };
+    case UPDATETASKDETTAIL: {
+      const { content, invalidTime, point, positionId, title } = actions.data;
+      return {
+        ...state,
+        actionType: actions.type,
+        taskEdit: {
+          content,
+          invalidTime,
+          point,
+          positionId,
+          title
+        }
+      };
+    }
     default:
       return {
         ...state,

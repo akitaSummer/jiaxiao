@@ -31,9 +31,12 @@ import {
   restUserInfoEdit,
   SUBMITUSERINFOTODB,
   UPDATE_USERINFOEDITTIPS,
-  USER_ERROR
+  USER_ERROR,
+  TaskStateType,
+  updateTaskEdit
 } from "../../store";
 import { degreeList } from "../../utils";
+import { addTask } from "../../api";
 
 import classNames from "classnames";
 
@@ -50,28 +53,34 @@ const InfoEdit = () => {
     ToastStatus.Success
   );
   const [toastMessage, setToastMessage] = useState("");
+  const taskInfo = useSelector<StoreType, TaskStateType>(state => state.task);
   const userInfo = useSelector<StoreType, UserStateType>(state => state.user);
   const datas = useSelector<StoreType, DatasStateType>(state => state.datas);
   const schoolList = useMemo(() => datas.schoolList, [datas]);
-  const [school, setSchool] = useState([...schoolList]);
+  // const [school, setSchool] = useState([...schoolList]);
   const dispatch = useDispatch();
-  const info = useMemo(() => userInfo.userInfoEdit, [userInfo]);
-  const [schoolSearchValue, setSchoolSearchValue] = useState(info.school);
+  const info = useMemo(() => taskInfo.taskEdit, [taskInfo]);
+  // const [schoolSearchValue, setSchoolSearchValue] = useState(info.school);
+
+  const [taskTitle, setTaskTitle] = useState(taskInfo.taskEdit?.title || "");
+  const [taskContent, setTaskContent] = useState(
+    taskInfo.taskEdit?.content || ""
+  );
+  const [taskPhone, setTaskPhone] = useState(taskInfo.taskEdit?.phone || "");
+  const [taskEmail, setTaskEmail] = useState(taskInfo.taskEdit?.email || "");
+  const [taskTime, setTaskTime] = useState(
+    taskInfo.taskEdit?.invalidTime || ""
+  );
+  const [taskImg, setTaskImg] = useState<string[]>(
+    taskInfo.taskEdit?.img || []
+  );
 
   const reset = () => {
     dispatch(restUserInfoEdit());
   };
 
-  const submit = () => {
-    if (
-      !Object.keys(info).every(item => {
-        if (item === "exp" || item === "tips") {
-          return true;
-        } else {
-          return !!info[item];
-        }
-      })
-    ) {
+  const submit = async () => {
+    if (!taskTitle || !taskContent || !taskPhone || !taskEmail || !taskTime) {
       setToastOpen(true);
       setToastStatus(ToastStatus.Error);
       setToastMessage("个人信息必须填写完整");
@@ -80,7 +89,22 @@ const InfoEdit = () => {
       }, 500);
       return;
     }
-    dispatch(asyncSubmitUserInfoToDb(userInfo.accessToken, info));
+    // dispatch(updateTaskEdit(userInfo.accessToken, info));
+    console.log(
+      taskTitle,
+      taskContent,
+      taskPhone,
+      taskEmail,
+      taskTime,
+      taskImg
+    );
+    await addTask({
+      content: taskContent,
+      invalidTime: taskTime,
+      point,
+      positionId,
+      title: taskTitle
+    });
   };
 
   const handleChange = (value, target) => {
@@ -100,24 +124,24 @@ const InfoEdit = () => {
     };
   }, []);
 
-  useEffect(() => {
-    if (!!schoolSearchValue) {
-      dispatch(asyncUpdateSchoolList(schoolSearchValue));
-    } else {
-      dispatch(updateSchoolList([]));
-    }
-  }, [schoolSearchValue]);
+  // useEffect(() => {
+  //   if (!!schoolSearchValue) {
+  //     dispatch(asyncUpdateSchoolList(schoolSearchValue));
+  //   } else {
+  //     dispatch(updateSchoolList([]));
+  //   }
+  // }, [schoolSearchValue]);
 
-  useEffect(() => {
-    const newList = [...schoolList];
-    setSchool(
-      newList.length === 0
-        ? !!schoolSearchValue
-          ? [schoolSearchValue]
-          : newList
-        : newList
-    );
-  }, [schoolList]);
+  // useEffect(() => {
+  //   const newList = [...schoolList];
+  //   setSchool(
+  //     newList.length === 0
+  //       ? !!schoolSearchValue
+  //         ? [schoolSearchValue]
+  //         : newList
+  //       : newList
+  //   );
+  // }, [schoolList]);
 
   useEffect(() => {
     if (userInfo.actionType === SUBMITUSERINFOTODB) {
@@ -167,16 +191,16 @@ const InfoEdit = () => {
           title="标题"
           type="text"
           placeholder="请输入标题"
-          value={info.title}
-          onChange={v => handleChange(v, "title")}
+          value={taskTitle}
+          onChange={v => setTaskTitle(v as string)}
         />
         <AtList>
           <AtListItem title="请填写内容" />
         </AtList>
         <AtTextarea
           count={false}
-          value={info.content}
-          onChange={v => handleChange(v, "content")}
+          value={taskContent}
+          onChange={v => setTaskContent(v as string)}
           maxLength={400}
           placeholder="请填写内容"
         />
@@ -185,27 +209,39 @@ const InfoEdit = () => {
           title="手机号"
           type="phone"
           placeholder="请输入您的手机号"
-          value={info.phone}
-          onChange={v => handleChange(v, "phone")}
+          value={taskPhone}
+          onChange={v => setTaskPhone(v as string)}
         />
         <AtInput
           name="email"
           title="email"
           type="text"
           placeholder="请输入您的email"
-          value={info.email}
-          onChange={v => handleChange(v, "email")}
+          value={taskEmail}
+          onChange={v => setTaskEmail(v as string)}
         />
         {/*// @ts-ignore*/}
         <Picker mode="date" onChange={v => handleChange(v, "date")}>
           <AtList>
-            <AtListItem title="请选择日期" extraText={"2018-04-22"} />
+            <AtListItem
+              title="请选择日期"
+              extraText={"2018-04-22"}
+              onClick={v => {
+                setTaskTime(v.timeStamp.toString());
+              }}
+            />
           </AtList>
         </Picker>
         <AtImagePicker
           length={5}
-          files={[]}
-          onChange={() => {}}
+          files={taskImg.map(item => {
+            return {
+              url: item
+            };
+          })}
+          onChange={v => {
+            setTaskImg(v.map(item => item.url));
+          }}
           onFail={() => {}}
           onImageClick={() => {}}
         />
@@ -270,39 +306,7 @@ const InfoEdit = () => {
         onClose={() => {
           setSchoolListShow(false);
         }}
-      >
-        <View className={classNames("school-float")}>
-          <AtSearchBar
-            actionName="搜索"
-            value={schoolSearchValue}
-            onChange={v => {
-              setSchoolSearchValue(v);
-            }}
-            onActionClick={() => {
-              setSchoolSearchValue(schoolSearchValue);
-            }}
-          />
-          <ScrollView scrollY className={classNames("scroll-container")}>
-            <AtList className={classNames("school-list")}>
-              {school.map((item, i) => {
-                return (
-                  <AtListItem
-                    className={classNames("school-list-item", {
-                      "school-select": item === info.school
-                    })}
-                    title={item}
-                    key={item + i}
-                    onClick={() => {
-                      setSchoolListShow(false);
-                      handleChange(item, "school");
-                    }}
-                  />
-                );
-              })}
-            </AtList>
-          </ScrollView>
-        </View>
-      </AtFloatLayout>
+      ></AtFloatLayout>
       <AtToast
         duration={0}
         isOpened={toastOpen}
